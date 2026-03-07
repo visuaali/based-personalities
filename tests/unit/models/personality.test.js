@@ -89,6 +89,12 @@ describe('Personality — serialisation', () => {
     expect(() => Personality.fromJSON(null)).toThrow();
     expect(() => Personality.fromJSON('string')).toThrow();
   });
+
+  test('fromJSON defaults to empty traits when traits property is missing', () => {
+    const p = Personality.fromJSON({ name: 'NoTraits' });
+    expect(p.name).toBe('NoTraits');
+    expect(p.traits.openness).toBe(50);
+  });
 });
 
 describe('Personality — dominanceScore', () => {
