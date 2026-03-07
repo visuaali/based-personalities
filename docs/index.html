@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Based Personalities — Big Five Generator</title>
+  <meta name="description" content="Generate and explore Big Five (OCEAN) personality profiles instantly. Reproducible with seeds, shareable via URL." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <h1>Based Personalities</h1>
+      <p>Generate Big Five (OCEAN) personality profiles — random or seeded, always shareable.</p>
+    </header>
+
+    <!-- Generator form -->
+    <div class="card">
+      <div class="form-group">
+        <label for="input-name">Name</label>
+        <input type="text" id="input-name" placeholder="e.g. Alice" maxlength="100" autocomplete="off" />
+        <div class="error-text" id="name-error"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="input-seed">Seed <span style="font-weight:400;text-transform:none">(optional — leave blank for random)</span></label>
+        <input type="number" id="input-seed" placeholder="e.g. 1337" min="0" step="1" />
+      </div>
+
+      <!-- Manual trait sliders (hidden by default) -->
+      <label class="sliders-toggle">
+        <input type="checkbox" id="toggle-sliders" />
+        Customise traits manually instead
+      </label>
+
+      <div class="sliders-panel" id="sliders-panel">
+        <div id="slider-list"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btn-generate">Generate</button>
+        <button class="btn btn-secondary" id="btn-reset">Reset</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="card" id="results">
+      <div class="result-header">
+        <span class="result-name" id="result-name"></span>
+        <span class="dominance-badge" id="result-dominance"></span>
+      </div>
+      <div id="trait-bars"></div>
+      <div class="action-row">
+        <button class="btn btn-secondary" id="btn-copy-json">Copy JSON</button>
+        <button class="btn btn-secondary" id="btn-share">Share link</button>
+        <span class="copy-feedback" id="copy-feedback">Copied!</span>
+      </div>
+    </div>
+
+    <footer>
+      Built with plain HTML &amp; JS · <a href="https://en.wikipedia.org/wiki/Big_Five_personality_traits" target="_blank" rel="noopener">About the Big Five</a> · <a href="https://github.com/visuaali/based-personalities" target="_blank" rel="noopener">GitHub</a>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
