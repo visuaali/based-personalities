@@ -1,0 +1,300 @@
+/* ─── Reset & Variables ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --accent:      #6366f1;
+  --accent-dark: #4f46e5;
+  --bg:          #f9fafb;
+  --surface:     #ffffff;
+  --border:      #e5e7eb;
+  --text:        #111827;
+  --muted:       #6b7280;
+  --error:       #dc2626;
+  --radius:      12px;
+  --shadow:      0 4px 24px rgba(0,0,0,.08);
+  --transition:  0.35s ease;
+
+  /* trait colours */
+  --c-openness:          #8b5cf6;
+  --c-conscientiousness: #0ea5e9;
+  --c-extraversion:      #f59e0b;
+  --c-agreeableness:     #10b981;
+  --c-neuroticism:       #ef4444;
+}
+
+/* ─── Base ──────────────────────────────────────────────────────────────── */
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ─── Layout ────────────────────────────────────────────────────────────── */
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────────── */
+header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+header p {
+  margin-top: .5rem;
+  color: var(--muted);
+  font-size: .95rem;
+}
+
+/* ─── Card ──────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+/* ─── Form ──────────────────────────────────────────────────────────────── */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+label {
+  display: block;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: .4rem;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: .65rem .85rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color .15s;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: var(--accent);
+  background: #fff;
+}
+
+.error-text {
+  color: var(--error);
+  font-size: .82rem;
+  margin-top: .35rem;
+  min-height: 1.1em;
+}
+
+/* ─── Trait sliders ─────────────────────────────────────────────────────── */
+.sliders-toggle {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  cursor: pointer;
+  font-size: .88rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  user-select: none;
+}
+
+.sliders-toggle input { cursor: pointer; accent-color: var(--accent); }
+
+.sliders-panel { display: none; }
+.sliders-panel.open { display: block; }
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+
+.slider-row .trait-label {
+  width: 7rem;
+  flex-shrink: 0;
+  font-size: .83rem;
+  font-weight: 500;
+  color: var(--text);
+  text-transform: capitalize;
+}
+
+.slider-row input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.slider-row .slider-val {
+  width: 2.2rem;
+  text-align: right;
+  font-size: .83rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────────────── */
+.btn-row {
+  display: flex;
+  gap: .75rem;
+  margin-top: .5rem;
+}
+
+.btn {
+  flex: 1;
+  padding: .7rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s, transform .1s;
+}
+
+.btn:active { transform: scale(.98); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover { background: var(--accent-dark); }
+
+.btn-secondary {
+  background: var(--bg);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+
+.btn-secondary:hover { background: var(--border); }
+
+/* ─── Results panel ─────────────────────────────────────────────────────── */
+#results {
+  display: none;
+  animation: fadeIn .4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.result-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+
+.dominance-badge {
+  font-size: .8rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent);
+  padding: .25rem .65rem;
+  border-radius: 999px;
+}
+
+/* ─── Trait bars ────────────────────────────────────────────────────────── */
+.trait-bar-row {
+  margin-bottom: 1rem;
+}
+
+.trait-bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: .82rem;
+  margin-bottom: .3rem;
+}
+
+.trait-bar-header .trait-name {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.trait-bar-header .trait-score {
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.bar-track {
+  height: 10px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  transition: width var(--transition);
+}
+
+.bar-fill.openness          { background: var(--c-openness); }
+.bar-fill.conscientiousness { background: var(--c-conscientiousness); }
+.bar-fill.extraversion      { background: var(--c-extraversion); }
+.bar-fill.agreeableness     { background: var(--c-agreeableness); }
+.bar-fill.neuroticism       { background: var(--c-neuroticism); }
+
+/* ─── Action buttons ────────────────────────────────────────────────────── */
+.action-row {
+  display: flex;
+  gap: .75rem;
+  margin-top: 1.5rem;
+}
+
+.action-row .btn { font-size: .85rem; padding: .55rem .85rem; flex: initial; }
+
+.copy-feedback {
+  font-size: .8rem;
+  color: var(--accent);
+  align-self: center;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.copy-feedback.show { opacity: 1; }
+
+/* ─── Footer ────────────────────────────────────────────────────────────── */
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  font-size: .8rem;
+  color: var(--muted);
+}
