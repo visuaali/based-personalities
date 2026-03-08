@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,62 +8,245 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
 
-    <header>
-      <h1>Based Personalities</h1>
-      <p>Generate Big Five (OCEAN) personality profiles — random or seeded, always shareable.</p>
-    </header>
-
-    <!-- Generator form -->
-    <div class="card">
-      <div class="form-group">
-        <label for="input-name">Name</label>
-        <input type="text" id="input-name" placeholder="e.g. Alice" maxlength="100" autocomplete="off" />
-        <div class="error-text" id="name-error"></div>
-      </div>
-
-      <div class="form-group">
-        <label for="input-seed">Seed <span style="font-weight:400;text-transform:none">(optional — leave blank for random)</span></label>
-        <input type="number" id="input-seed" placeholder="e.g. 1337" min="0" step="1" />
-      </div>
-
-      <!-- Manual trait sliders (hidden by default) -->
-      <label class="sliders-toggle">
-        <input type="checkbox" id="toggle-sliders" />
-        Customise traits manually instead
-      </label>
-
-      <div class="sliders-panel" id="sliders-panel">
-        <div id="slider-list"></div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-primary" id="btn-generate">Generate</button>
-        <button class="btn btn-secondary" id="btn-reset">Reset</button>
+  <!-- ── Nav ───────────────────────────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#">
+        <span class="logo-icon">◈</span> Based Personalities
+      </a>
+      <div class="nav-actions">
+        <a class="nav-link" href="https://github.com/visuaali/based-personalities" target="_blank" rel="noopener">GitHub</a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="theme-icon">☀</span>
+        </button>
       </div>
     </div>
+  </nav>
 
-    <!-- Results -->
-    <div class="card" id="results">
-      <div class="result-header">
-        <span class="result-name" id="result-name"></span>
-        <span class="dominance-badge" id="result-dominance"></span>
-      </div>
-      <div id="trait-bars"></div>
-      <div class="action-row">
-        <button class="btn btn-secondary" id="btn-copy-json">Copy JSON</button>
-        <button class="btn btn-secondary" id="btn-share">Share link</button>
-        <span class="copy-feedback" id="copy-feedback">Copied!</span>
-      </div>
+  <!-- ── Hero ──────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
     </div>
+    <div class="hero-inner">
+      <div class="hero-badge">Big Five · OCEAN Model</div>
+      <h1 class="hero-title">Personality<br><span class="gradient-text">Profiler</span></h1>
+      <p class="hero-sub">Generate deterministic Big Five personality profiles from a name and seed.<br>Shareable, reproducible, and always instant.</p>
+      <div class="hero-features">
+        <span class="feature-chip">⚡ Instant generation</span>
+        <span class="feature-chip">🔗 Shareable links</span>
+        <span class="feature-chip">🎛 Manual sliders</span>
+        <span class="feature-chip">📋 JSON export</span>
+      </div>
+      <a class="hero-cta" href="#generator">Try it now ↓</a>
+    </div>
+  </section>
 
-    <footer>
-      Built with plain HTML &amp; JS · <a href="https://en.wikipedia.org/wiki/Big_Five_personality_traits" target="_blank" rel="noopener">About the Big Five</a> · <a href="https://github.com/visuaali/based-personalities" target="_blank" rel="noopener">GitHub</a>
-    </footer>
+  <!-- ── Generator ─────────────────────────────────────────────────────── -->
+  <main class="main" id="generator">
+    <div class="container">
 
-  </div>
+      <div class="section-label">Generator</div>
+
+      <div class="card">
+        <div class="form-group">
+          <label for="input-name">Name</label>
+          <input type="text" id="input-name" placeholder="e.g. Alice" maxlength="100" autocomplete="off" />
+          <div class="error-text" id="name-error"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="input-seed">
+            Seed
+            <span class="label-hint">optional — leave blank for random</span>
+          </label>
+          <input type="number" id="input-seed" placeholder="e.g. 1337" min="0" step="1" />
+        </div>
+
+        <label class="sliders-toggle">
+          <input type="checkbox" id="toggle-sliders" />
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          Customise traits manually
+        </label>
+
+        <div class="sliders-panel" id="sliders-panel">
+          <div class="sliders-heading">Trait values <span>(0 – 100)</span></div>
+          <div id="slider-list"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-generate">
+            <span class="btn-icon">✦</span> Generate
+          </button>
+          <button class="btn btn-ghost" id="btn-reset">Reset</button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="card card-results" id="results">
+        <div class="result-header">
+          <div class="result-name-wrap">
+            <div class="result-label">Profile</div>
+            <div class="result-name" id="result-name"></div>
+          </div>
+          <div class="dominance-wrap">
+            <div class="dominance-label">Dominance</div>
+            <div class="dominance-badge" id="result-dominance"></div>
+          </div>
+        </div>
+
+        <div class="trait-grid" id="trait-bars"></div>
+
+        <div class="action-row">
+          <button class="btn btn-sm btn-ghost" id="btn-copy-json">
+            <span>{ }</span> Copy JSON
+          </button>
+          <button class="btn btn-sm btn-ghost" id="btn-share">
+            <span>↗</span> Share link
+          </button>
+          <span class="copy-feedback" id="copy-feedback"></span>
+        </div>
+      </div>
+
+      <!-- ── Trait explainer ──────────────────────────────────────────── -->
+      <div class="section-label" style="margin-top:3rem">The OCEAN Model</div>
+
+      <div class="traits-explainer">
+        <div class="trait-card trait-openness">
+          <div class="trait-card-icon">🔮</div>
+          <div class="trait-card-name">Openness</div>
+          <div class="trait-card-desc">Curiosity, creativity, and preference for novelty and variety of experience.</div>
+          <div class="trait-card-bar"><div class="trait-card-fill"></div></div>
+        </div>
+        <div class="trait-card trait-conscientiousness">
+          <div class="trait-card-icon">📐</div>
+          <div class="trait-card-name">Conscientiousness</div>
+          <div class="trait-card-desc">Organisation, dependability, and a tendency to be disciplined and goal-directed.</div>
+          <div class="trait-card-bar"><div class="trait-card-fill"></div></div>
+        </div>
+        <div class="trait-card trait-extraversion">
+          <div class="trait-card-icon">⚡</div>
+          <div class="trait-card-name">Extraversion</div>
+          <div class="trait-card-desc">Sociability, assertiveness, and a tendency to seek stimulation in others' company.</div>
+          <div class="trait-card-bar"><div class="trait-card-fill"></div></div>
+        </div>
+        <div class="trait-card trait-agreeableness">
+          <div class="trait-card-icon">🌿</div>
+          <div class="trait-card-name">Agreeableness</div>
+          <div class="trait-card-desc">Compassion, cooperativeness, and an orientation towards social harmony.</div>
+          <div class="trait-card-bar"><div class="trait-card-fill"></div></div>
+        </div>
+        <div class="trait-card trait-neuroticism">
+          <div class="trait-card-icon">🌊</div>
+          <div class="trait-card-name">Neuroticism</div>
+          <div class="trait-card-desc">Emotional sensitivity, moodiness, and a tendency to experience negative emotions.</div>
+          <div class="trait-card-bar"><div class="trait-card-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- ── Example profiles ─────────────────────────────────────────── -->
+      <div class="section-label" style="margin-top:3rem">Example Profiles</div>
+
+      <div class="examples-grid">
+        <button class="example-card" data-name="Alice" data-seed="42">
+          <div class="example-name">Alice</div>
+          <div class="example-seed">seed: 42</div>
+          <div class="example-bars">
+            <div class="ex-bar openness"          style="width:72%"></div>
+            <div class="ex-bar conscientiousness" style="width:84%"></div>
+            <div class="ex-bar extraversion"      style="width:51%"></div>
+            <div class="ex-bar agreeableness"     style="width:90%"></div>
+            <div class="ex-bar neuroticism"       style="width:33%"></div>
+          </div>
+          <div class="example-cta">Load →</div>
+        </button>
+        <button class="example-card" data-name="Bob" data-seed="1337">
+          <div class="example-name">Bob</div>
+          <div class="example-seed">seed: 1337</div>
+          <div class="example-bars">
+            <div class="ex-bar openness"          style="width:38%"></div>
+            <div class="ex-bar conscientiousness" style="width:61%"></div>
+            <div class="ex-bar extraversion"      style="width:78%"></div>
+            <div class="ex-bar agreeableness"     style="width:45%"></div>
+            <div class="ex-bar neuroticism"       style="width:67%"></div>
+          </div>
+          <div class="example-cta">Load →</div>
+        </button>
+        <button class="example-card" data-name="Charlie" data-seed="9999">
+          <div class="example-name">Charlie</div>
+          <div class="example-seed">seed: 9999</div>
+          <div class="example-bars">
+            <div class="ex-bar openness"          style="width:91%"></div>
+            <div class="ex-bar conscientiousness" style="width:29%"></div>
+            <div class="ex-bar extraversion"      style="width:55%"></div>
+            <div class="ex-bar agreeableness"     style="width:70%"></div>
+            <div class="ex-bar neuroticism"       style="width:48%"></div>
+          </div>
+          <div class="example-cta">Load →</div>
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ────────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Based Personalities · Big Five OCEAN Generator</span>
+      <span class="footer-links">
+        <a href="https://en.wikipedia.org/wiki/Big_Five_personality_traits" target="_blank" rel="noopener">About OCEAN</a>
+        <a href="https://github.com/visuaali/based-personalities" target="_blank" rel="noopener">GitHub</a>
+      </span>
+    </div>
+  </footer>
 
   <script src="app.js"></script>
+  <script>
+    /* ── Theme toggle ───────────────────────────────────────────────── */
+    const html   = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const icon   = toggle.querySelector('.theme-icon');
+
+    function applyTheme(t) {
+      html.setAttribute('data-theme', t);
+      icon.textContent = t === 'dark' ? '☽' : '☀';
+      localStorage.setItem('bp-theme', t);
+    }
+
+    const saved = localStorage.getItem('bp-theme') ||
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(saved);
+
+    toggle.addEventListener('click', () => {
+      applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ── Example card loaders ───────────────────────────────────────── */
+    document.querySelectorAll('.example-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.getElementById('input-name').value = card.dataset.name;
+        document.getElementById('input-seed').value = card.dataset.seed;
+        document.getElementById('toggle-sliders').checked = false;
+        document.getElementById('sliders-panel').classList.remove('open');
+        document.getElementById('btn-generate').click();
+        document.getElementById('generator').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    /* ── Animate trait card bars on scroll ──────────────────────────── */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.25 });
+
+    document.querySelectorAll('.traits-explainer').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
