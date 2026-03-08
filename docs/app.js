@@ -1,3 +1,8 @@
+/* ─── API config ─────────────────────────────────────────────────────────── */
+// Set window.ANALYSE_API_URL before this script loads to point at a deployed
+// backend, e.g.: <script>window.ANALYSE_API_URL = 'https://my-server.example.com/analyse';</script>
+const ANALYSE_API_URL = (typeof window !== 'undefined' && window.ANALYSE_API_URL) || 'http://localhost:3000/analyse';
+
 /* ─── Core logic (inlined from src/ — no build step required) ────────────── */
 
 const TRAITS = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism'];
@@ -62,6 +67,8 @@ const resultDom     = document.getElementById('result-dominance');
 const traitBars     = document.getElementById('trait-bars');
 const btnCopyJson   = document.getElementById('btn-copy-json');
 const btnShare      = document.getElementById('btn-share');
+const btnAnalyse    = document.getElementById('btn-analyse');
+const analyseSection = document.getElementById('analyse-section');
 const copyFeedback  = document.getElementById('copy-feedback');
 
 /* ─── Build trait sliders ────────────────────────────────────────────────── */
@@ -122,9 +129,9 @@ function generate() {
   } else {
     // Random / seeded mode
     const seedRaw = inputSeed.value.trim();
-    usedSeed = seedRaw !== '' ? Math.abs(parseInt(seedRaw, 10)) : undefined;
-    if (seedRaw !== '' && isNaN(usedSeed)) {
-      usedSeed = undefined;
+    if (seedRaw !== '') {
+      const parsed = parseInt(seedRaw, 10);
+      usedSeed = isNaN(parsed) ? undefined : Math.abs(parsed);
     }
     traits = generateTraits(usedSeed);
 
@@ -171,6 +178,36 @@ function renderResult({ name, traits }) {
   });
 }
 
+/* ─── AI Analysis ────────────────────────────────────────────────────────── */
+async function analyseWithAi() {
+  if (!lastResult) return;
+
+  analyseSection.innerHTML = '<p class="analyse-loading">Analysing…</p>';
+  btnAnalyse.disabled = true;
+
+  try {
+    const res = await fetch(ANALYSE_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: lastResult.name, traits: lastResult.traits }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Server error');
+    analyseSection.innerHTML = `<pre class="analyse-report">${escapeHtml(data.report)}</pre>`;
+  } catch (err) {
+    analyseSection.innerHTML = `<p class="analyse-error">Error: ${escapeHtml(err.message)}</p>`;
+  } finally {
+    btnAnalyse.disabled = false;
+  }
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 /* ─── Reset ──────────────────────────────────────────────────────────────── */
 function resetAll() {
   inputName.value = '';
@@ -183,6 +220,7 @@ function resetAll() {
     sliderInputs[trait].nextElementSibling.textContent = '50';
   }
   resultsCard.style.display = 'none';
+  analyseSection.innerHTML = '';
   lastResult = null;
   history.replaceState(null, '', location.pathname);
 }
@@ -225,6 +263,7 @@ btnGenerate.addEventListener('click', generate);
 btnReset.addEventListener('click', resetAll);
 btnCopyJson.addEventListener('click', copyJson);
 btnShare.addEventListener('click', shareLink);
+btnAnalyse.addEventListener('click', analyseWithAi);
 
 inputName.addEventListener('keydown', (e) => { if (e.key === 'Enter') generate(); });
 
@@ -239,7 +278,9 @@ inputName.addEventListener('keydown', (e) => { if (e.key === 'Enter') generate()
   const seed = params.get('seed');
   if (seed !== null) {
     inputSeed.value = seed;
-    lastResult = { name: name.trim(), traits: generateTraits(Math.abs(parseInt(seed, 10))), seed: parseInt(seed, 10) };
+    const parsedSeed = parseInt(seed, 10);
+    const numericSeed = isNaN(parsedSeed) ? undefined : Math.abs(parsedSeed);
+    lastResult = { name: name.trim(), traits: generateTraits(numericSeed), seed: numericSeed !== undefined ? numericSeed : null };
     renderResult(lastResult);
     return;
   }
