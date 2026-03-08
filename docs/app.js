@@ -1,3 +1,8 @@
+/* ─── API config ─────────────────────────────────────────────────────────── */
+// Set window.ANALYSE_API_URL before this script loads to point at a deployed
+// backend, e.g.: <script>window.ANALYSE_API_URL = 'https://my-server.example.com/analyse';</script>
+const ANALYSE_API_URL = (typeof window !== 'undefined' && window.ANALYSE_API_URL) || 'http://localhost:3000/analyse';
+
 /* ─── Core logic (inlined from src/ — no build step required) ────────────── */
 
 const TRAITS = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism'];
@@ -124,9 +129,9 @@ function generate() {
   } else {
     // Random / seeded mode
     const seedRaw = inputSeed.value.trim();
-    usedSeed = seedRaw !== '' ? Math.abs(parseInt(seedRaw, 10)) : undefined;
-    if (seedRaw !== '' && isNaN(usedSeed)) {
-      usedSeed = undefined;
+    if (seedRaw !== '') {
+      const parsed = parseInt(seedRaw, 10);
+      usedSeed = isNaN(parsed) ? undefined : Math.abs(parsed);
     }
     traits = generateTraits(usedSeed);
 
@@ -181,7 +186,7 @@ async function analyseWithAi() {
   btnAnalyse.disabled = true;
 
   try {
-    const res = await fetch('http://localhost:3000/analyse', {
+    const res = await fetch(ANALYSE_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: lastResult.name, traits: lastResult.traits }),
@@ -273,7 +278,9 @@ inputName.addEventListener('keydown', (e) => { if (e.key === 'Enter') generate()
   const seed = params.get('seed');
   if (seed !== null) {
     inputSeed.value = seed;
-    lastResult = { name: name.trim(), traits: generateTraits(Math.abs(parseInt(seed, 10))), seed: parseInt(seed, 10) };
+    const parsedSeed = parseInt(seed, 10);
+    const numericSeed = isNaN(parsedSeed) ? undefined : Math.abs(parsedSeed);
+    lastResult = { name: name.trim(), traits: generateTraits(numericSeed), seed: numericSeed !== undefined ? numericSeed : null };
     renderResult(lastResult);
     return;
   }

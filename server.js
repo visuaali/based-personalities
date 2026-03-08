@@ -29,7 +29,7 @@ app.post('/analyse', async (req, res) => {
     res.json({ report });
   } catch (err) {
     console.error('analysePersonality error:', err);
-    res.status(500).json({ error: 'Analysis failed. Is ANTHROPIC_API_KEY set?' });
+    res.status(500).json({ error: 'Analysis failed.' });
   }
 });
 
