@@ -61,6 +61,7 @@ Big Five trait scores (0 = very low, 100 = very high):
     }
   }
 
+  if (!result) throw new Error('No result returned from analysis agent');
   return result;
 }
 

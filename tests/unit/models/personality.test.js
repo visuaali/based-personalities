@@ -118,4 +118,13 @@ describe('Personality — dominanceScore', () => {
     const score = p.dominanceScore({ openness: 1, conscientiousness: 0, extraversion: 0, agreeableness: 0, neuroticism: 0 });
     expect(score).toBe(100);
   });
+
+  test('clamps result to [TRAIT_MIN, TRAIT_MAX] when weights exceed 1 in total', () => {
+    const p = new Personality('Over', {
+      openness: 100, conscientiousness: 100, extraversion: 100, agreeableness: 100, neuroticism: 100
+    });
+    // Weights sum to 5 — raw total would be 500, must be clamped to 100
+    const score = p.dominanceScore({ openness: 1, conscientiousness: 1, extraversion: 1, agreeableness: 1, neuroticism: 1 });
+    expect(score).toBe(TRAIT_MAX);
+  });
 });

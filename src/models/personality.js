@@ -77,7 +77,7 @@ class Personality {
       total += this.traits[trait] * w;
     }
 
-    return Math.round(total);
+    return clampTrait(Math.round(total));
   }
 }
 

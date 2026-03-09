@@ -290,7 +290,7 @@ inputName.addEventListener('keydown', (e) => { if (e.key === 'Enter') generate()
   if (hasTraits) {
     const traits = {};
     for (const trait of TRAITS) {
-      traits[trait] = clampTrait(Number(params.get(trait)));
+      traits[trait] = clampTrait(Math.round(Number(params.get(trait))));
     }
     toggleSliders.checked = true;
     slidersPanel.classList.add('open');
