@@ -5,6 +5,7 @@ const { generatePersonality, createRng } = require('./generators/personalityGene
 const { validatePersonalityInput, NAME_MAX_LENGTH } = require('./validators/inputValidator');
 const { analysePersonality } = require('./agent');
 const { getSunSign, getWesternProfile, SUN_SIGNS } = require('./calculators/westernAstrology');
+const { getChineseSign, getChineseProfile, CHINESE_SIGNS } = require('./calculators/chineseZodiac');
 
 module.exports = {
   Personality,
@@ -19,4 +20,7 @@ module.exports = {
   getSunSign,
   getWesternProfile,
   SUN_SIGNS,
+  getChineseSign,
+  getChineseProfile,
+  CHINESE_SIGNS,
 };

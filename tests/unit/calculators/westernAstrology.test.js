@@ -263,3 +263,16 @@ describe('getWesternProfile', () => {
     expect(() => getWesternProfile(1, 32)).toThrow();
   });
 });
+
+// ---------------------------------------------------------------------------
+// getSunSign — data-driven: all 12 signs reachable from their own start date
+// ---------------------------------------------------------------------------
+
+describe('getSunSign — data-driven: all 12 signs reachable from their start date', () => {
+  test.each(SUN_SIGNS.map(s => [s.name, s.start.month, s.start.day]))(
+    '%s is returned when querying its own start date (%i/%i)',
+    (name, month, day) => {
+      expect(getSunSign(month, day).name).toBe(name);
+    }
+  );
+});
