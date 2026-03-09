@@ -4,6 +4,7 @@ const { Personality, TRAITS, TRAIT_MIN, TRAIT_MAX } = require('./models/personal
 const { generatePersonality, createRng } = require('./generators/personalityGenerator');
 const { validatePersonalityInput, NAME_MAX_LENGTH } = require('./validators/inputValidator');
 const { analysePersonality } = require('./agent');
+const { getSunSign, getWesternProfile, SUN_SIGNS } = require('./calculators/westernAstrology');
 
 module.exports = {
   Personality,
@@ -15,4 +16,7 @@ module.exports = {
   validatePersonalityInput,
   NAME_MAX_LENGTH,
   analysePersonality,
+  getSunSign,
+  getWesternProfile,
+  SUN_SIGNS,
 };
