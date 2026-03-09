@@ -48,18 +48,20 @@ describe('analysePersonality — result extraction', () => {
     expect(output).toBe('Final result');
   });
 
-  test('returns empty string when no message has a result key', async () => {
+  test('throws when no message has a result key', async () => {
     mockQuery.mockReturnValue(
       makeStream({ type: 'text', text: 'hello' }, { type: 'tool_use' }),
     );
-    const output = await analysePersonality(personality);
-    expect(output).toBe('');
+    await expect(analysePersonality(personality)).rejects.toThrow(
+      'No result returned from analysis agent',
+    );
   });
 
-  test('returns empty string when the async iterable yields no messages', async () => {
+  test('throws when the async iterable yields no messages', async () => {
     mockQuery.mockReturnValue(makeStream());
-    const output = await analysePersonality(personality);
-    expect(output).toBe('');
+    await expect(analysePersonality(personality)).rejects.toThrow(
+      'No result returned from analysis agent',
+    );
   });
 });
 
@@ -70,7 +72,7 @@ describe('analysePersonality — prompt content', () => {
   beforeEach(() => {
     mockQuery.mockImplementation(({ prompt }) => {
       capturedPrompt = prompt;
-      return makeStream({ result: '' });
+      return makeStream({ result: 'ok' });
     });
   });
 
@@ -112,7 +114,7 @@ describe('analysePersonality — query options', () => {
   beforeEach(() => {
     mockQuery.mockImplementation(({ options }) => {
       capturedOptions = options;
-      return makeStream({ result: '' });
+      return makeStream({ result: 'ok' });
     });
   });
 
