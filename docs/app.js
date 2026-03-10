@@ -1,7 +1,7 @@
 /* ─── API config ─────────────────────────────────────────────────────────── */
 // Set window.ANALYSE_API_URL before this script loads to point at a deployed
 // backend, e.g.: <script>window.ANALYSE_API_URL = 'https://my-server.example.com/analyse';</script>
-const ANALYSE_API_URL = (typeof window !== 'undefined' && window.ANALYSE_API_URL) || 'http://localhost:3000/analyse';
+const ANALYSE_API_URL = (typeof window !== 'undefined' && window.ANALYSE_API_URL) || '/api/analyse';
 
 /* ─── Core logic (inlined from src/ — no build step required) ────────────── */
 

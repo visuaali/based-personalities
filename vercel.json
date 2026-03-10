@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "buildCommand": null,
+  "outputDirectory": "docs",
+  "functions": {
+    "api/analyse.js": {
+      "maxDuration": 60
+    }
+  }
+}
